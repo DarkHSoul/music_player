@@ -1,4 +1,3 @@
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,8 +15,9 @@ void main() async {
   Get.put(ThemeController(initialThemeMode: initialThemeMode));
   runApp(const MainApp());
 }
+
 class MainApp extends StatelessWidget {
-  const MainApp({Key? key});
+  const MainApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,4 +30,3 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-

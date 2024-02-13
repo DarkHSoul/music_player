@@ -5,6 +5,8 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:music_player/controllers/audio_controller.dart';
 
 class MusicPage extends StatefulWidget {
+  const MusicPage({super.key});
+
   @override
   State<MusicPage> createState() => _MusicPageState();
 }
@@ -25,9 +27,9 @@ class _MusicPageState extends State<MusicPage> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Playlist ?'),
-          content: const SingleChildScrollView(
+        return const AlertDialog(
+          title: Text('Delete Playlist ?'),
+          content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
                 Text('Would you like to approve deletion of this playlist?'),
@@ -50,7 +52,7 @@ class _MusicPageState extends State<MusicPage> {
       ),
       body: Obx(() {
         if (audioController.allSongs.isEmpty) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else {
@@ -61,8 +63,8 @@ class _MusicPageState extends State<MusicPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
                     'Songs',
                     style: TextStyle(
@@ -95,7 +97,7 @@ class _MusicPageState extends State<MusicPage> {
         onPressed: () {
           _showCreatePlaylistDialog(context);
         },
-        child: Icon(Icons.playlist_add),
+        child: const Icon(Icons.playlist_add),
       ),
     );
   }
@@ -107,12 +109,12 @@ class _MusicPageState extends State<MusicPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Create Playlist"),
+          title: const Text("Create Playlist"),
           content: TextField(
             controller: playlistNameController,
-            decoration: InputDecoration(labelText: "Enter Playlist Name"),
+            decoration: const InputDecoration(labelText: "Enter Playlist Name"),
           ),
-          actions: [
+          actions: const [
             // Add actions here
           ],
         );

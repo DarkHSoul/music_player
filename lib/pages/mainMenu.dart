@@ -32,14 +32,14 @@ class _MainMenuState extends State<MainMenu> {
         children: [
           ElevatedButton(onPressed: (){
             //navigate to music page
-            Get.to( MusicPage());
-          }, child: Text("Music Player")),
+            Get.to( const MusicPage());
+          }, child: const Text("Music Player")),
           ElevatedButton(onPressed: (){
             //navigate to deezer page
-            Get.to(DeezerPage());
-          }, child:Text("Deezer Page")),
-          DeezerAuthButton(),
-         TextButton(onPressed: (){launchUrl(Uri.https('www.google.com'));}, child: Text("google"))
+            Get.to(const DeezerPage());
+          }, child:const Text("Deezer Page")),
+          const DeezerAuthButton(),
+         TextButton(onPressed: (){launchUrl(Uri.https('www.google.com'));}, child: const Text("google"))
         ],
       )
 

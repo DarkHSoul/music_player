@@ -15,7 +15,7 @@ class DeezerPage extends StatefulWidget {
 
 class _DeezerPageState extends State<DeezerPage> {
   final AudioController audioController = Get.put(AudioController());
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   List<dynamic> _searchResults = [];
   bool _loading = false;
 
@@ -34,7 +34,7 @@ class _DeezerPageState extends State<DeezerPage> {
               decoration: InputDecoration(
                 hintText: "Search for songs...",
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     _searchSongs(_searchController.text);
                   },
@@ -44,7 +44,7 @@ class _DeezerPageState extends State<DeezerPage> {
           ),
           Expanded(
             child: _loading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     itemCount: _searchResults.length,
                     itemBuilder: (context, index) {

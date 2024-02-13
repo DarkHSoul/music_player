@@ -3,29 +3,33 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class DeezerAuthButton extends StatelessWidget {
+  const DeezerAuthButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: _launchDeezerAuthPage,
-      child: Text('Authorize with Deezer'),
+      child: const Text('Authorize with Deezer'),
     );
   }
 
   Future<void> _launchDeezerAuthPage() async {
-    final String authorizeUrl = 'https://connect.deezer.com/oauth/auth.php?app_id=667183&redirect_uri=https://myapp/oauth/callback&perms=basic_access';
+    const String authorizeUrl = 'https://connect.deezer.com/oauth/auth.php?app_id=667183&redirect_uri=https://myapp/oauth/callback&perms=basic_access';
     // Launch the URL
     await launch(authorizeUrl);
   }
 }
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Deezer Auth',
       home: DeezerAuthPage(),
     );
@@ -33,6 +37,8 @@ class MyApp extends StatelessWidget {
 }
 
 class DeezerAuthPage extends StatefulWidget {
+  const DeezerAuthPage({super.key});
+
   @override
   _DeezerAuthPageState createState() => _DeezerAuthPageState();
 }
@@ -54,7 +60,7 @@ class _DeezerAuthPageState extends State<DeezerAuthPage> {
         // For example, you can parse the URL to extract authorization code, access token, etc.
         print('Received callback URL: $url');
       }
-      await Future.delayed(Duration(seconds: 1)); // Adjust the delay as needed
+      await Future.delayed(const Duration(seconds: 1)); // Adjust the delay as needed
     }
   }
 
@@ -77,9 +83,9 @@ class _DeezerAuthPageState extends State<DeezerAuthPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Deezer Auth Callback'),
+        title: const Text('Deezer Auth Callback'),
       ),
-      body: Center(
+      body: const Center(
         child: Text('Waiting for Deezer callback...'),
       ),
     );
