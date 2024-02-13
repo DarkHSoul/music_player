@@ -1,69 +1,74 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:on_audio_query/on_audio_query.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+
+import 'package:on_audio_query/on_audio_query.dart';
 
 class AudioController extends GetxController {
   final AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer();
-  final OnAudioQuery audioQuery = OnAudioQuery();
-  bool _hasPermission = false;
-
+  final OnAudioQuery _audioQuery = OnAudioQuery();
   RxList<SongModel> allSongs = RxList<SongModel>([]);
   Rxn<SongModel> currentSong = Rxn<SongModel>();
-  RxInt currentSongIndex = 0.obs;
-  RxList<PlaylistModel> allPlaylists = RxList<PlaylistModel>([]);
-  RxBool isPlaying = false.obs; // Add this to track playing status
+  RxBool isPlaying = false.obs;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-    fetchAllSongs();
-    fetchAllPlaylists();
+    // Fetch songs from both assets and device storage when the AudioController is initialized
+    fetchSongs();
   }
 
-  Future<void> fetchAllSongs() async {
-    List<SongModel> songs = await audioQuery.querySongs();
-    allSongs.assignAll(songs);
+  Future<void> fetchSongs() async {
+    // Fetch songs from local assets
+    await fetchLocalAssetSongs();
+    // Fetch songs from device storage
+    await fetchDeviceStorageSongs();
   }
 
-  void fetchAllPlaylists() async {
-    List<PlaylistModel> playlists = await audioQuery.queryPlaylists();
-    allPlaylists.assignAll(playlists);
+  Future<void> fetchLocalAssetSongs() async {
+    // You can manually add your local asset songs here
+    // For example:
+    allSongs.addAll([
+      // Add your local asset songs here
+    ]);
   }
 
-  void play(SongModel song) {
-    final Audio audio = Audio.file(song.data);
+  Future<void> fetchDeviceStorageSongs() async {
+    // Query all songs from device storage
+    List<SongModel> deviceSongs = await _audioQuery.querySongs();
+    // Add device storage songs to the list
+    allSongs.addAll(deviceSongs);
+  }
+
+  
+  Future<void> play(SongModel song) async {
+    // Extract the necessary details from the song model
+    final String title = song.title;
+    final String? artist = song.artist;
+    final String? album = song.album;
+    final String data = song.data;
+
+    // Create an Audio instance using the data path
+    final Audio audio = Audio.file(data);
+
+    // Stop any current playback
     _assetsAudioPlayer.stop();
-    pause();
+
+    // Open the new audio file for playback
     _assetsAudioPlayer.open(
       audio,
       showNotification: true,
       headPhoneStrategy: HeadPhoneStrategy.pauseOnUnplug,
       loopMode: LoopMode.playlist,
-      // Set the current song to the one being played
-
-      // Update playing status
     );
+
+    // Update currentSong and isPlaying
     currentSong.value = song;
     isPlaying.value = true;
   }
 
-  // Check and request for permission.
-  Future<void> checkAndRequestPermissions({bool retry = false}) async {
-    // The param 'retryRequest' is false, by default.
-    _hasPermission = await audioQuery.permissionsRequest(
-      retryRequest: retry,
-    );
-
-    // Only call update the UI if application has all required permissions.
-    if (_hasPermission) {
-      update();
-    }
-  }
-
   void pause() {
     _assetsAudioPlayer.pause();
-    isPlaying.value = false; // Update playing status
+    isPlaying.value = false;
   }
 
   void disposeAudioPlayer() {
@@ -71,11 +76,22 @@ class AudioController extends GetxController {
     _assetsAudioPlayer.dispose();
   }
 
-  Future<void> deletePlaylist(PlaylistModel playlist) async {
-    // Use the OnAudioQuery plugin to delete the playlist
-    await audioQuery.removePlaylist(playlist.id);
+  void playSongFromDeezer(String previewUrl) {
+    // Create an Audio instance for the Deezer preview URL
+    final Audio audio = Audio.network(previewUrl);
 
-    // After deleting the playlist, update the list of playlists
-    fetchAllPlaylists();
+    // Stop any current playback
+    _assetsAudioPlayer.stop();
+
+    // Open the new audio for playback
+    _assetsAudioPlayer.open(
+      audio,
+      showNotification: true,
+      headPhoneStrategy: HeadPhoneStrategy.pauseOnUnplug,
+      loopMode: LoopMode.playlist,
+    );
+
+    // Set isPlaying to true
+    isPlaying.value = true;
   }
 }

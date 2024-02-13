@@ -14,7 +14,10 @@ dependencies:
   get:
   get_storage:
   assets_audio_player:
-  
+  http:
+  url_launcher:
+  webview_flutter:
+
   on_audio_query: 
 dev_dependencies:
   flutter_test:

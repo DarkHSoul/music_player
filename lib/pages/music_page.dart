@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
+
 import 'package:music_player/controllers/audio_controller.dart';
 
-class MusicPage extends StatelessWidget {
+class MusicPage extends StatefulWidget {
+  @override
+  State<MusicPage> createState() => _MusicPageState();
+}
+
+class _MusicPageState extends State<MusicPage> {
   final AudioController audioController = Get.put(AudioController());
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch all songs when the MusicPage is initialized
+    audioController.fetchLocalAssetSongs();
+  }
+
   Future<void> _showDeletePlaylistDialog() async {
     final context = Get.context!;
     return showDialog<void>(
@@ -13,35 +26,16 @@ class MusicPage extends StatelessWidget {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
+          title: const Text('Delete Playlist ?'),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
+                Text('Would you like to approve deletion of this playlist?'),
               ],
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: const Text('Deny'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              onPressed: () async {
-                // Delete the long pressed playlist
-                await audioController.deletePlaylist(
-                  audioController.allPlaylists[0],
-                );
-                // Fetch all playlists again to update the list
-                audioController.fetchAllPlaylists();
-                // Close the dialog
-                Navigator.of(context).pop();
-              },
-              child: Text("Delete"),
-            ),
+            // Add actions here
           ],
         );
       },
@@ -62,7 +56,7 @@ class MusicPage extends StatelessWidget {
         } else {
           return RefreshIndicator(
             onRefresh: () async {
-              await audioController.fetchAllSongs();
+              // Don't call fetchAllSongs here
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,41 +78,9 @@ class MusicPage extends StatelessWidget {
                       final song = audioController.allSongs[index];
                       return ListTile(
                         title: Text(song.title),
-                        subtitle: Text(song.artist ?? 'Unknown Artist'),
+                        subtitle: Text(song.artist ?? ''),
                         onTap: () {
                           audioController.play(song);
-                        },
-                      );
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Playlists',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: audioController.allPlaylists.length,
-                    itemBuilder: (context, index) {
-                      final playlist = audioController.allPlaylists[index];
-                      return ListTile(
-                        title: Text(playlist.playlist +
-                            " (" +
-                            playlist.numOfSongs.toString() +
-                            ")"),
-                        onLongPress: () {
-                          //show an alert dialog to delete the playlist
-                          _showDeletePlaylistDialog();
-                        },
-                        onTap: () {
-                          // Handle playlist selection
-                          _handlePlaylistSelection(playlist);
                         },
                       );
                     },
@@ -151,26 +113,7 @@ class MusicPage extends StatelessWidget {
             decoration: InputDecoration(labelText: "Enter Playlist Name"),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () async {
-                String playlistName = playlistNameController.text.trim();
-                if (playlistName.isNotEmpty) {
-                  // Create the playlist using the entered name
-                  await audioController.audioQuery.createPlaylist(playlistName);
-                  // Fetch all playlists again to update the list
-                  audioController.fetchAllPlaylists();
-                  // Close the dialog
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("Create"),
-            ),
+            // Add actions here
           ],
         );
       },

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_player/buttons/deezerAuthButton.dart';
+import 'package:music_player/pages/deezerPage.dart';
 import 'package:music_player/pages/music_page.dart';
 import 'package:music_player/pages/settings.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -30,9 +33,13 @@ class _MainMenuState extends State<MainMenu> {
           ElevatedButton(onPressed: (){
             //navigate to music page
             Get.to( MusicPage());
-          }, child: Text("Music Player"))
-          
-         
+          }, child: Text("Music Player")),
+          ElevatedButton(onPressed: (){
+            //navigate to deezer page
+            Get.to(DeezerPage());
+          }, child:Text("Deezer Page")),
+          DeezerAuthButton(),
+         TextButton(onPressed: (){launchUrl(Uri.https('www.google.com'));}, child: Text("google"))
         ],
       )
 
