@@ -18,6 +18,7 @@ class AudioController extends GetxController {
   }
 
   Future<void> fetchSongs() async {
+
     // Fetch songs from local assets
     await fetchLocalAssetSongs();
     // Fetch songs from device storage
@@ -76,9 +77,9 @@ class AudioController extends GetxController {
     _assetsAudioPlayer.dispose();
   }
 
-  void playSongFromDeezer(String previewUrl) {
+  void playSongFromDeezer(String link) {
     // Create an Audio instance for the Deezer preview URL
-    final Audio audio = Audio.network(previewUrl);
+    final Audio audio = Audio.network(link);
 
     // Stop any current playback
     _assetsAudioPlayer.stop();

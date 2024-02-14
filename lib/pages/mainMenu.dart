@@ -4,6 +4,7 @@ import 'package:music_player/buttons/deezerAuthButton.dart';
 import 'package:music_player/pages/deezerPage.dart';
 import 'package:music_player/pages/music_page.dart';
 import 'package:music_player/pages/settings.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainMenu extends StatefulWidget {
@@ -39,7 +40,9 @@ class _MainMenuState extends State<MainMenu> {
             Get.to(const DeezerPage());
           }, child:const Text("Deezer Page")),
           const DeezerAuthButton(),
-         TextButton(onPressed: (){launchUrl(Uri.https('www.google.com'));}, child: const Text("google"))
+         TextButton(onPressed: ()async{
+          await Permission.storage.request();
+         }, child: const Text("perm"))
         ],
       )
 

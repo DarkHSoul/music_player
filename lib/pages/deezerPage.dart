@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:music_player/controllers/audio_controller.dart';
@@ -53,8 +55,9 @@ class _DeezerPageState extends State<DeezerPage> {
                         title: Text(result['title']),
                         subtitle: Text(result['artist']['name']),
                         onTap: () {
-                          String previewUrl = result['preview'];
-                          audioController.playSongFromDeezer(previewUrl);
+                          String link = result["preview"];
+                          audioController.playSongFromDeezer(link);
+                          
                         },
                       );
                     },

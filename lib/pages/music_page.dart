@@ -3,6 +3,17 @@ import 'package:get/get.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 import 'package:music_player/controllers/audio_controller.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+Future<void> _requestPermissions() async {
+  // Request permission to read and write external storage
+  var status = await Permission.storage.request();
+  if (status.isGranted) {
+    // Permission granted, you can now read and write to external storage
+  } else {
+    // Permission denied, handle accordingly
+  }
+}
 
 class MusicPage extends StatefulWidget {
   const MusicPage({super.key});
@@ -12,12 +23,26 @@ class MusicPage extends StatefulWidget {
 }
 
 class _MusicPageState extends State<MusicPage> {
+  late final OnAudioQuery audioQuery;
   final AudioController audioController = Get.put(AudioController());
 
   @override
   void initState() {
     super.initState();
+
+    audioQuery = OnAudioQuery();
+
+    _init();
     // Fetch all songs when the MusicPage is initialized
+    audioController.fetchLocalAssetSongs();
+  }
+
+  Future<void> _init() async {
+    final songs = await audioQuery.querySongs();
+    setState(() {
+      audioController.allSongs.assignAll(songs);
+    });
+    await _requestPermissions();
     audioController.fetchLocalAssetSongs();
   }
 
@@ -80,7 +105,7 @@ class _MusicPageState extends State<MusicPage> {
                       final song = audioController.allSongs[index];
                       return ListTile(
                         title: Text(song.title),
-                        subtitle: Text(song.artist ?? ''),
+                        subtitle: Text(song.artist ?? 'Ahmet'),
                         onTap: () {
                           audioController.play(song);
                         },
@@ -93,41 +118,10 @@ class _MusicPageState extends State<MusicPage> {
           );
         }
       }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showCreatePlaylistDialog(context);
-        },
-        child: const Icon(Icons.playlist_add),
-      ),
+      
     );
   }
 
-  void _showCreatePlaylistDialog(BuildContext context) {
-    TextEditingController playlistNameController = TextEditingController();
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Create Playlist"),
-          content: TextField(
-            controller: playlistNameController,
-            decoration: const InputDecoration(labelText: "Enter Playlist Name"),
-          ),
-          actions: const [
-            // Add actions here
-          ],
-        );
-      },
-    );
-  }
-}
 
-void _handlePlaylistSelection(PlaylistModel playlist) {
-  // Debug print to confirm the playlist selection
-  print("Selected Playlist: ${playlist.playlist}");
-
-  // Placeholder logic for handling playlist selection
-  // Replace this with your actual logic
-  // For example, you can navigate to a new screen to display songs in the selected playlist
 }

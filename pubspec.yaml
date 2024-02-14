@@ -17,6 +17,7 @@ dependencies:
   http:
   url_launcher:
   webview_flutter:
+  permission_handler:
 
   on_audio_query: 
 dev_dependencies:
