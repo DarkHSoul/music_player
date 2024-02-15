@@ -18,6 +18,7 @@ dependencies:
   url_launcher:
   webview_flutter:
   permission_handler:
+  uni_links:
 
   on_audio_query: 
 dev_dependencies:
