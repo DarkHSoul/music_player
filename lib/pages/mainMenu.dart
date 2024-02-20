@@ -80,11 +80,6 @@ class _MainMenuState extends State<MainMenu> {
                   Get.to(() => IntroPage());
                 },
                 child: Text("Intro")),
-            TextButton(
-                onPressed: () {
-                  //request internet permission via permission handler
-                },
-                child: Text("Request Internet perm")),
           ],
         ));
   }
