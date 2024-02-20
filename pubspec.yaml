@@ -20,6 +20,11 @@ dependencies:
   permission_handler:
   uni_links:
 
+  path_provider:
+  flutter_sliding_box:
+
+
+
   on_audio_query: 
 dev_dependencies:
   flutter_test:

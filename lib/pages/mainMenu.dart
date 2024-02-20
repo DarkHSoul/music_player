@@ -1,13 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:music_player/buttons/my_floating_button.dart';
+
+import 'package:music_player/controllers/audio_controller.dart';
 import 'package:music_player/pages/deezerAuthPage.dart';
 
-import 'package:music_player/pages/deezerPage.dart';
 import 'package:music_player/pages/intropage.dart';
 import 'package:music_player/pages/music_page.dart';
 import 'package:music_player/pages/settings.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MainMenu extends StatefulWidget {
   const MainMenu({super.key});
@@ -17,6 +20,7 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
+  AudioController audioController = Get.put(AudioController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,20 +36,39 @@ class _MainMenuState extends State<MainMenu> {
                 icon: const Icon(Icons.settings))
           ],
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: 0,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.music_note), label: "Music"),
+          ],
+          onTap: (index) {
+            if (index == 1 && Get.currentRoute != '/musicPage') {
+              //navigate to music page
+              Get.to(() => MusicPage());
+            }
+            //if index is 0 and page is not mainmenu
+            else if (index == 0 && Get.currentRoute != '/mainMenu') {
+              //navigate to deezer page
+              Get.to(() => MainMenu());
+            }
+          },
+          // Your BottomNavigationBar items go here
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Obx(() =>
+            audioController.currentSong.value != null
+                ? myFloatButton(audioController: audioController)
+                : SizedBox.shrink()),
         body: Column(
           children: [
             ElevatedButton(
                 onPressed: () {
                   //navigate to music page
-                  Get.to(const MusicPage());
+                  Get.to(() => MusicPage());
                 },
                 child: const Text("Music Player")),
-            ElevatedButton(
-                onPressed: () {
-                  //navigate to deezer page
-                  Get.to(const DeezerPage());
-                },
-                child: const Text("Deezer Page")),
             const DeezerAuthButton(),
             TextButton(
                 onPressed: () async {
@@ -54,14 +77,14 @@ class _MainMenuState extends State<MainMenu> {
                 child: const Text("perm")),
             TextButton(
                 onPressed: () {
-                  Get.to(IntroPage());
+                  Get.to(() => IntroPage());
                 },
                 child: Text("Intro")),
-                TextButton(onPressed: (){
+            TextButton(
+                onPressed: () {
                   //request internet permission via permission handler
-                  
-                }, child: Text("Request Internet perm"))
-           
+                },
+                child: Text("Request Internet perm")),
           ],
         ));
   }

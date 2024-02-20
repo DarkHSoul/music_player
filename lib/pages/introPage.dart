@@ -63,7 +63,7 @@ class _IntroPageState extends State<IntroPage> {
               
               child: Text("Lets Get Started!"),
               onTap: () {
-                Get.to(MainMenu());
+                Get.to(() => MainMenu());
               },
             )
           ),
